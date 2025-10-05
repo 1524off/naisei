@@ -7,9 +7,10 @@ from discord.ext import commands
 
 TOKEN = os.environ["DISCORD_BOT_TOKEN"]
 CHANNEL_ID = int(os.environ["DISCORD_CHANNEL_ID"])
-HOPE_ROLE_ID = 1424450874649870427
+HOPE_ROLE_ID = 1424450874649870427  # 内政部長通知ロール
 tz = ZoneInfo("Asia/Tokyo")
 
+# === 各同盟設定 ===
 ROLES = {
     1: {"name": "NFG", "emoji": "<:NFG:1423567563773972480>", "role_id": 1423254785938948226, "lang": "jp"},
     2: {"name": "1UP", "emoji": "<:1UP:1423549433173512202>", "role_id": 1423302704972824576, "lang": "en"},
@@ -23,6 +24,7 @@ ROLES = {
     0: {"name": "Free Day", "emoji": "<:naisei:1424476127006818527>", "role_id": None, "lang": "free"},
 }
 
+# === Discord設定 ===
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -37,7 +39,7 @@ async def on_ready():
     guild = channel.guild
     hope_role = guild.get_role(HOPE_ROLE_ID)
 
-    # 通知対象
+    # 通知対象メンバー
     if info["role_id"]:
         alliance_role = guild.get_role(info["role_id"])
         members_to_notify = [m for m in guild.members if hope_role in m.roles and alliance_role in m.roles]
@@ -52,29 +54,43 @@ async def on_ready():
     alliance = info["name"]
     lang = info["lang"]
 
-    # ===== 埋め込み本文 =====
+    # === 全同盟絵文字（フリーデー用） ===
+    all_emojis = (
+        "<:NFG:1423567563773972480> <:1UP:1423549433173512202> "
+        "<:HAP:1423549885931585556> <:JST:1423567512146018334> "
+        "<:N9Q:1423549486617071648> <:sbz:1423548880468840560> "
+        "<:MKW:1423549726086791188> <:BM1:1423567630995951636>"
+    )
+
+    # === メッセージ分岐 ===
     if lang == "en":
         desc = (
-            f"📢 **chief**\n"
-            f"{emoji} {alliance}\n"
-            f"📅 Today {mm}/{dd}\n"
-            f"⏰ UTC 0:00\n"
-            f"✉️  <:naisei:1424476127006818527>＋{emoji}"
+            f"**📢 Chief on Duty: {alliance}**\n"
+            f"📅 {mm}/{dd}\n\n"
+            f"Let's do our best today! ✨\n\n"
+            f"✉️ **Notification Target**\n"
+            f"<:naisei:1424476127006818527> ＋\n"
+            f"{emoji}"
         )
+
     elif lang == "free":
         desc = (
-            f"📢 **本日の内政部長はフリー / Free Day**\n"
-            f"📅 今日は {mm}/{dd}\n"
-            f"⏰ 毎朝 9:00 / UTC 0:00\n"
-            f"✉️ 通知対象　<:naisei:1424476127006818527>"
+            f"**📢 本日の内政部長はフリー / Chief Free Day**\n"
+            f"📅 {mm}/{dd}・{day_digit}のつく日\n\n"
+            f"よろしくお願いします！\n\n"
+            f"✉️ **通知対象**\n"
+            f"<:naisei:1424476127006818527> ＋\n"
+            f"{all_emojis}"
         )
+
     else:
         desc = (
-            f"📢 **内政部長アラート**\n"
-            f"{emoji} 担当：{alliance} さん\n"
-            f"📅 今日は {mm}/{dd}\n"
-            f"⏰ 毎朝 9:00\n"
-            f"✉️ 通知対象　<:naisei:1424476127006818527> ＋ {emoji}"
+            f"**📢 本日の内政部長は {alliance} さん**\n"
+            f"📅 {mm}/{dd}・{day_digit}のつく日\n\n"
+            f"よろしくお願いします🙇‍♂️✨\n\n"
+            f"✉️ **通知対象**\n"
+            f"<:naisei:1424476127006818527> ＋\n"
+            f"{emoji}"
         )
 
     embed = discord.Embed(description=desc, color=0x9EC3FF)
