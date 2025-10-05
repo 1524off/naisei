@@ -1,13 +1,13 @@
-alert.py
+# alert.py
 import os
 import datetime
 from zoneinfo import ZoneInfo
 import discord
 from discord.ext import commands
 
-=== 設定 ===
+# === 設定 ===
 TOKEN = os.environ["DISCORD_BOT_TOKEN"]
-CHANNEL_ID = int(os.environ["DISCORD_CHANNEL_ID"])
+CHANNEL_ID = int(os.environ["DISCORD_CHANNEL_ID"])  # ← SyntaxErrorの原因修正版！
 
 ROLES = {
     1: {"name": "NFG", "role_id": 1423254785938948226, "lang": "jp"},
@@ -61,15 +61,15 @@ async def on_ready():
     # === メッセージ切り替え ===
     if lang == "en":
         title = "📢 Internal Affairs Alert"
-        desc = f"🏛️ Internal Affairs: {alliance}\n📅 Today: {mm}/{dd}"
+        desc = f"🏛️ **Internal Affairs: {alliance}**\n📅 **Today: {mm}/{dd}**"
         note = "✉️ Notification Target: Internal Affairs + Alliance Role"
     elif lang == "free":
         title = "📢 内政部長アラート"
-        desc = f"📅 今日は {mm}/{dd}\n🏛️ 盟主会フリーです Today is Free Day!"
+        desc = f"📅 **今日は {mm}/{dd}**\n🏛️ **盟主会フリーです Today is Free Day!**"
         note = "✉️ 通知対象：希望者全員"
     else:
         title = "📢 内政部長アラート"
-        desc = f"🏛️ 担当：{alliance} さん\n📅 今日は {mm}/{dd}"
+        desc = f"🏛️ **担当：{alliance} さん**\n📅 **今日は {mm}/{dd}**"
         note = "✉️ 通知対象：内政部長通知ロール ＋ 担当同盟ロール"
 
     embed = discord.Embed(title=title, description=desc, color=0x9EC3FF)
