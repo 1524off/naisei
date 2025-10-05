@@ -7,19 +7,20 @@ from discord.ext import commands
 
 # === 設定 ===
 TOKEN = os.environ["DISCORD_BOT_TOKEN"]
-CHANNEL_ID = int(os.environ["DISCORD_CHANNEL_ID"])  # ← SyntaxErrorの原因修正版！
+CHANNEL_ID = int(os.environ["DISCORD_CHANNEL_ID"])
 
+# === 担当同盟設定 ===
 ROLES = {
     1: {"name": "NFG", "role_id": 1423254785938948226, "lang": "jp"},
     2: {"name": "1UP", "role_id": 1423302704972824576, "lang": "en"},
     3: {"name": "HAP", "role_id": 1423254452407894118, "lang": "jp"},
     4: {"name": "JST", "role_id": 1423254682498895964, "lang": "jp"},
     5: {"name": "N9Q", "role_id": None, "lang": "jp"},
-    6: {"name": "MKW", "role_id": None, "lang": "jp"},
-    7: {"name": "SBZ", "role_id": None, "lang": "jp"},
-    8: {"name": "BM1", "role_id": None, "lang": "jp"},
-    9: {"name": "Free Day", "role_id": None, "lang": "free"},
-    0: {"name": "Free Day", "role_id": None, "lang": "free"},
+    6: {"name": "sbz", "role_id": None, "lang": "jp"},  # ←小文字
+    7: {"name": "BM1", "role_id": None, "lang": "jp"},
+    8: {"name": "MKW", "role_id": None, "lang": "jp"},
+    9: {"name": "Free Day (Leaders Only)", "role_id": None, "lang": "free"},
+    0: {"name": "Free Day (Leaders Only)", "role_id": None, "lang": "free"},
 }
 
 HOPE_ROLE_ID = 1424450874649870427  # 「内政部長通知」ロール
@@ -43,6 +44,7 @@ async def on_ready():
 
     # === 通知対象の抽出 ===
     if info["role_id"]:
+        # 担当同盟＋希望者ロール両方持つ人のみ通知
         role_today = channel.guild.get_role(info["role_id"])
         members_to_notify = [
             m for m in channel.guild.members
@@ -50,9 +52,7 @@ async def on_ready():
         ]
     else:
         # フリー（9・0の日）は希望者全員通知
-        members_to_notify = [
-            m for m in channel.guild.members if hope_role in m.roles
-        ]
+        members_to_notify = [m for m in channel.guild.members if hope_role in m.roles]
 
     mentions = " ".join([m.mention for m in members_to_notify])
     alliance = info["name"]
