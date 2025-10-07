@@ -2,27 +2,28 @@ name: Daily Internal Affairs Alert
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # JST 9:00（UTC 0:00）
-  workflow_dispatch:     # 手動実行も可能（テスト用）
+    - cron: "0 0 * * *"   # UTC0:00 → JST9:00
+  workflow_dispatch:       # 手動実行テスト用
 
 jobs:
   alert:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up job
+      - name: 🧩 Set up repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: Install dependencies
-        run: pip install discord.py pytz
+      - name: 📦 Install dependencies
+        run: |
+          pip install -U discord.py pytz
 
-      - name: Send daily alert
+      - name: 🚀 Send daily alert
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
-        run: python alert.py
+        run: |
+          python alert_multi_server.py
