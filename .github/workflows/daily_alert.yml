@@ -3,7 +3,7 @@ name: Daily Internal Affairs Alert
 on:
   schedule:
     - cron: "0 0 * * *"   # UTC0:00 → JST9:00
-  workflow_dispatch:       # 手動実行テスト用
+  workflow_dispatch:       # 手動実行も可能
 
 jobs:
   alert:
@@ -22,7 +22,7 @@ jobs:
         run: |
           pip install -U discord.py pytz
 
-      - name: 🚀 Send daily alert
+      - name: 🚀 Send daily alert to both servers
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         run: |
