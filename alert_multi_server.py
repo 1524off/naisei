@@ -1,4 +1,13 @@
-# alert_multi_server.py
+# alert_multi_server.
+from zoneinfo import ZoneInfo
+import datetime
+
+# タイムゾーン設定
+tz = ZoneInfo("Asia/Tokyo")
+
+# 現在時刻を日本時間で取得
+now = datetime.datetime.now(tz)
+print("現在の日本時間:", now)
 import os
 import datetime
 from zoneinfo import ZoneInfo
