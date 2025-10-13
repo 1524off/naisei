@@ -2,8 +2,8 @@ name: Daily Internal Affairs Alert
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # JST 9:00
-    - cron: "15 0 * * *"  # JST 9:15 予備
+    - cron: "0 0 * * *"    # UTC 0:00（＝JST 9:00）
+    - cron: "15 0 * * *"   # UTC 0:15（＝JST 9:15 予備）
   workflow_dispatch:
 
 jobs:
