@@ -2,12 +2,14 @@ name: Daily Internal Affairs Alert
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # UTC0:00 → JST9:00
-  workflow_dispatch:       # 手動実行も可能
+    - cron: "0 0 * * *"   # JST 9:00
+    - cron: "15 0 * * *"  # JST 9:15 予備
+  workflow_dispatch:
 
 jobs:
   alert:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: 🧩 Set up repository
@@ -26,4 +28,5 @@ jobs:
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         run: |
+          echo "⏰ UTC time now: $(date -u)"
           python alert_multi_server.py
